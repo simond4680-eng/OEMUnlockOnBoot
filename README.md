@@ -15,7 +15,30 @@ OEMUnlockOnBoot is a simple Magisk/KernelSU module that ensures Android's `OEM u
 
 ## Verifying digital signatures
 
-To verify the digital signatures of the downloads, follow [the steps here](https://github.com/chenxiaolong/chenxiaolong/blob/master/VERIFY_SSH_SIGNATURES.md).
+Each release includes a module zip and a detached SSH signature:
+
+- `OEMUnlockOnBoot-<version>-release.zip`
+- `OEMUnlockOnBoot-<version>-release.zip.sig`
+
+To verify a download, create a trusted signers file and run `ssh-keygen -Y verify`.
+
+For Unix-like systems and Windows Command Prompt:
+
+```bash
+echo chenxiaolong ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOe6/tBnO7xZhAWXRj3ApUYgn+XZ0wnQiXM8B7tPgv4 > chenxiaolong_trusted_keys
+ssh-keygen -Y verify -f chenxiaolong_trusted_keys -I chenxiaolong -n file -s <filename>.sig < <filename>
+```
+
+For Windows PowerShell:
+
+```powershell
+echo 'chenxiaolong ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOe6/tBnO7xZhAWXRj3ApUYgn+XZ0wnQiXM8B7tPgv4' | Out-File -Encoding ascii chenxiaolong_trusted_keys
+Start-Process -Wait -NoNewWindow -RedirectStandardInput <filename> ssh-keygen -ArgumentList "-Y verify -f chenxiaolong_trusted_keys -I chenxiaolong -n file -s <filename>.sig"
+```
+
+If verification succeeds, `ssh-keygen` reports a `Good "file" signature`.
+
+For additional details, see [VERIFY_SSH_SIGNATURES.md](https://github.com/chenxiaolong/chenxiaolong/blob/master/VERIFY_SSH_SIGNATURES.md).
 
 ## Building from source
 
